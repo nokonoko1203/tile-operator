@@ -79,14 +79,18 @@ class TileOperate:
         else:
             print(f"Error: {r.status_code}")
 
-    def tile_to_latlon(self, x, y):
+    def tile_coords_to_latlon(self, x, y):
         n = 2.0**self.zoom_level
         lon_deg = x / n * 360.0 - 180.0
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * y / n)))
         lat_deg = math.degrees(lat_rad)
         return lon_deg, lat_deg
 
-    def tile_to_latlon_bbox(self, x, y):
-        right_top = self.tile_to_latlon(x + 1, y)
-        left_bottom = self.tile_to_latlon(x, y + 1)
+    def tile_coords_to_latlon_bbox(self, x, y):
+        right_top = self.tile_coords_to_latlon(x + 1, y)
+        left_bottom = self.tile_coords_to_latlon(x, y + 1)
         return left_bottom[0], left_bottom[1], right_top[0], right_top[1]
+
+    def tile_coords_to_epsg3857(self, x, y):
+        lon, lat = self.tile_coords_to_latlon(x, y)
+        return self.latlon_to_epsg3857(lon, lat)
