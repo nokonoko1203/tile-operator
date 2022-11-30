@@ -107,18 +107,15 @@ class TileOperate:
             file_path_list.append(output + f"/{self.zoom_level}/{tile[0]}/{tile[1]}{ext}")
         return file_path_list
 
-    # 左上の座標とピクセル数を与えて、ピクセル中心の座標を返す
     def get_pixel_center(self, tile_x, tile_y):
-        # タイル座標からEPSG:3857のbboxを取得
         bbox = self.tile_coords_to_epsg3857_bbox(tile_x, tile_y)
         lower_left = bbox[0]
         upper_right = bbox[1]
-        # bboxから四隅の座標を取得
         left, bottom = lower_left
         right, top = upper_right
-        # 解像度を取得
+
         resolution = self.get_resolution(self.zoom_level)
-        # 左上のピクセルの中心座標を取得
+
         upper_left_center_x = left + resolution / 2
         upper_left_center_y = top - resolution / 2
 
