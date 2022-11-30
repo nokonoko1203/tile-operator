@@ -20,5 +20,5 @@ Commands:
 ## test
 
 ```bash
-$ pytest -qs tests/test_sample.py
+$ pytest -qs tests
 ```
