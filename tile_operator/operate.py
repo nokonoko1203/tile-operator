@@ -2,6 +2,7 @@ import math
 import os
 
 import geopandas as gpd
+import rasterio
 import requests
 from tqdm import tqdm
 
@@ -95,9 +96,55 @@ class TileOperate:
         lon, lat = self.tile_coords_to_latlon(x, y)
         return self.latlon_to_epsg3857(lon, lat)
 
+    def tile_coords_to_epsg3857_bbox(self, x, y):
+        bbox = self.tile_coords_to_latlon_bbox(x, y)
+        return self.latlon_to_epsg3857(bbox[0], bbox[1]), self.latlon_to_epsg3857(bbox[2], bbox[3])
+
     def get_file_path_list(self, output="./output"):
         file_path_list = []
         for tile in self.tile_list:
             ext = os.path.splitext(self.tile_url)[1]
             file_path_list.append(output + f"/{self.zoom_level}/{tile[0]}/{tile[1]}{ext}")
         return file_path_list
+
+    # 左上の座標とピクセル数を与えて、ピクセル中心の座標を返す
+    def get_pixel_center(self, tile_x, tile_y):
+        # タイル座標からEPSG:3857のbboxを取得
+        bbox = self.tile_coords_to_epsg3857_bbox(tile_x, tile_y)
+        lower_left = bbox[0]
+        upper_right = bbox[1]
+        # bboxから四隅の座標を取得
+        left, bottom = lower_left
+        right, top = upper_right
+        # 解像度を取得
+        resolution = self.get_resolution(self.zoom_level)
+        # 左上のピクセルの中心座標を取得
+        upper_left_center_x = left + resolution / 2
+        upper_left_center_y = top - resolution / 2
+
+        return upper_left_center_x, upper_left_center_y
+
+    def tile_to_geotiff(self, tile_path):
+        ext = os.path.splitext(tile_path)[1]
+        tile_x = int(tile_path.split("/")[-2])
+        tile_y = int(tile_path.split("/")[-1].split(".")[0])
+
+        upper_left_center_x, upper_left_center_y = self.get_pixel_center(tile_x, tile_y)
+        resolution = self.get_resolution(self.zoom_level)
+
+        with rasterio.open(tile_path) as src:
+            transform = rasterio.Affine(resolution, 0.0, upper_left_center_x, 0.0, -resolution, upper_left_center_y)
+            data = src.read()
+            num_of_bands = data.shape[0]
+            with rasterio.open(
+                tile_path.replace(ext, ".tif"),
+                "w",
+                driver="GTiff",
+                height=src.height,
+                width=src.width,
+                count=num_of_bands,
+                dtype="uint8",
+                crs="EPSG:3857",
+                transform=transform,
+            ) as dst:
+                dst.write(data)
