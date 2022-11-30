@@ -42,7 +42,7 @@ Commands:
 - install
 
 ```bash
-$ pip install git+https://github.com/nokonoko1203/tile-operator.git
+$ pip install tile-operator
 ```
 
 ```python
