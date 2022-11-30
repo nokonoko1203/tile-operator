@@ -94,3 +94,10 @@ class TileOperate:
     def tile_coords_to_epsg3857(self, x, y):
         lon, lat = self.tile_coords_to_latlon(x, y)
         return self.latlon_to_epsg3857(lon, lat)
+
+    def get_file_path_list(self, output="./output"):
+        file_path_list = []
+        for tile in self.tile_list:
+            ext = os.path.splitext(self.tile_url)[1]
+            file_path_list.append(output + f"/{self.zoom_level}/{tile[0]}/{tile[1]}{ext}")
+        return file_path_list
