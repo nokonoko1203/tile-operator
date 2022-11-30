@@ -50,7 +50,7 @@ from tile_operator.operate import TileOperate
 
 to = TileOperate(
     tile_url="https://tile.openstreetmap.jp/{z}/{x}/{y}.png",
-    file_path="data/assets/sapporo.geojson",
+    file_path="tests/data/test.geojson",
     zoom_level=18,
 )
 to.set_tile_list()
