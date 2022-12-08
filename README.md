@@ -62,3 +62,17 @@ to.download_all_tiles()
 ```bash
 $ pytest -qs tests
 ```
+
+## development
+
+### setup
+
+```bash
+$ poetry config virtualenvs.in-project true
+$ pyenv global 3.9
+$ python -m venv .venv
+$ source .venv/bin/activate
+$ python -m pip install --upgrade pip
+$ poetry install
+$ poetry shell
+```
