@@ -69,10 +69,17 @@ $ pytest -qs tests
 
 ```bash
 $ poetry config virtualenvs.in-project true
-$ pyenv global 3.9 # Version 3.8 or higher will work, but 3.9 is recommended.
+$ pyenv global 3.9 # Version 3.7 or higher will work, but 3.9 is recommended.
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ python -m pip install --upgrade pip
 $ poetry install
 $ poetry shell
+```
+
+### publish
+
+```bash
+$ poetry build
+$ poetry publish
 ```
