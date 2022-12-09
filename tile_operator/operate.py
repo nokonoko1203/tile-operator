@@ -30,7 +30,6 @@ class TileOperate:
         self.file_path = file_path
         self.bbox = Bbox(*bbox)
         self.zoom_level = zoom_level
-        # self.geometries = self.get_geometries()
         self.tile_list = []
 
     @staticmethod
