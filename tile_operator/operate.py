@@ -7,7 +7,7 @@ import requests
 from tqdm import tqdm
 
 
-class Bounds:
+class Bbox:
     def __init__(self, left, bottom, right, top):
         self.left = left
         self.bottom = bottom
@@ -21,16 +21,16 @@ class Bounds:
 def file_to_bounds(file_path):
     gdf = gpd.read_file(file_path)
     bounds = gdf.total_bounds
-    return Bounds(*bounds)
+    return Bbox(*bounds)
 
 
 class TileOperate:
     def __init__(self, tile_url, file_path, bbox=(141.347, 43.066, 141.354, 43.070), zoom_level=18):
         self.tile_url = tile_url
         self.file_path = file_path
-        self.bbox = Bounds(*bbox)
+        self.bbox = Bbox(*bbox)
         self.zoom_level = zoom_level
-        self.geometries = self.get_geometries()
+        # self.geometries = self.get_geometries()
         self.tile_list = []
 
     @staticmethod
@@ -44,14 +44,6 @@ class TileOperate:
     def get_resolution(z):
         return 156543.03392 / math.pow(2, z)
 
-    def get_geometries(self):
-        area = gpd.read_file(self.file_path)
-        return area
-
-    def get_bbox(self):
-        bbox = self.geometries.total_bounds
-        return bbox
-
     def get_tile_coordinates(self, longitude, latitude):
         tile_x = int((longitude + 180) / 360 * 2**self.zoom_level)
         tile_y = int(
@@ -62,7 +54,7 @@ class TileOperate:
         return tile_x, tile_y
 
     def get_tile_range(self):
-        bbox = self.get_bbox()
+        bbox = self.bbox.bounds()
         upper_left = self.get_tile_coordinates(bbox[0], bbox[3])
         lower_right = self.get_tile_coordinates(bbox[2], bbox[1])
         tile_range = upper_left[0], upper_left[1], lower_right[0], lower_right[1]
