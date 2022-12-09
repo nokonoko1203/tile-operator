@@ -9,7 +9,6 @@ from tile_operator.operate import TileOperate
 def create_tile_operator_instance():
     to = TileOperate(
         tile_url="https://tile.openstreetmap.jp/{z}/{x}/{y}.png",
-        file_path="tests/data/test.geojson",
         zoom_level=18,
     )
     return to
