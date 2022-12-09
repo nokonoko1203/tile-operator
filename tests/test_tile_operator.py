@@ -1,8 +1,10 @@
 import os
 
+import geopandas as gpf
 import mercantile
 import numpy as np
 from PIL import Image
+from shapely.geometry import box
 
 from tile_operator.operate import TileOperate
 
@@ -62,3 +64,14 @@ def test_get_tile_bounds_list():
 
     test_bbox = mercantile.Bbox(15734562.272503529, 5322616.027609963, 15734715.146560099, 5322768.901666533)
     assert tile_bounds_list[0] == test_bbox
+
+
+def test_create_tile_grid_from_bbox_list():
+    to = create_tile_operator_instance()
+    to.set_tile_list()
+    tile_grid = to.create_tile_grid_from_bbox_list()
+
+    geoms = tile_grid["geometry"]
+    first_bounds = geoms[0].bounds
+
+    assert first_bounds == (15734562.272503529, 5322616.027609963, 15734715.146560099, 5322768.901666533)
