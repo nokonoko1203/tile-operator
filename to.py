@@ -19,7 +19,7 @@ def main(context, verbose):
 @click.argument("file_path", type=click.Path(exists=True))
 @click.argument("zoom_level", type=int)
 @click.pass_context
-def download(context, tile_url, file_path, zoom_level):
+def download(context, tile_url, file_path, bbox, zoom_level):
     """Tile Download"""
     try:
         if context.obj["verbose"]:
@@ -27,6 +27,7 @@ def download(context, tile_url, file_path, zoom_level):
             click.echo(f" Options:")
             click.echo(f"  tile_url={tile_url}")
             click.echo(f"  file_path={file_path}")
+            click.echo(f"  bbox={bbox}")
             click.echo(f"  zoom_level={zoom_level}")
             click.echo(f"\n")
 
@@ -37,6 +38,7 @@ def download(context, tile_url, file_path, zoom_level):
     to = TileOperate(
         tile_url=tile_url,
         file_path=file_path,
+        bbox=bbox,
         zoom_level=zoom_level,
     )
     to.set_tile_list()

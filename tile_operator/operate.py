@@ -8,9 +8,10 @@ from tqdm import tqdm
 
 
 class TileOperate:
-    def __init__(self, tile_url, file_path, zoom_level=18):
+    def __init__(self, tile_url, file_path, bbox=(141.347, 43.066, 141.354, 43.070), zoom_level=18):
         self.tile_url = tile_url
         self.file_path = file_path
+        self.bbox = bbox
         self.zoom_level = zoom_level
         self.geometries = self.get_geometries()
         self.tile_list = []
