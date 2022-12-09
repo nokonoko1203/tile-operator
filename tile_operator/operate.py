@@ -179,7 +179,6 @@ class TileOperate:
 
         for bounds in tile_bounds:
             left, bottom, right, top = bounds[0]
-            print(left, bottom, right, top)
             x, y, z = bounds[1:]
 
             grid.append(
