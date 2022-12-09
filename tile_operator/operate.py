@@ -153,3 +153,7 @@ class TileOperate:
                 transform=transform,
             ) as dst:
                 dst.write(data)
+
+    def get_tile_list_with_zoom_level(self):
+        tile_list = [[*t, self.zoom_level] for t in self.tile_list]
+        return tile_list
