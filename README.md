@@ -26,7 +26,7 @@ Tile Download
 $ python to.py --help        
 Usage: to.py [OPTIONS] COMMAND [ARGS]...
 
-  Tile operator v0.0.1
+  Tile operator v0.0.4
 
 Options:
   --version                 Show the version and exit.
@@ -49,12 +49,12 @@ $ pip install tile-operator
 from tile_operator.operate import TileOperate
 
 to = TileOperate(
-    tile_url="https://tile.openstreetmap.jp/{z}/{x}/{y}.png",
-    file_path="tests/data/test.geojson",
     zoom_level=18,
 )
+
+tile_url = "https://tile.openstreetmap.jp/{z}/{x}/{y}.png"
 to.set_tile_list()
-to.download_all_tiles()
+to.download_all_tiles(tile_url)
 ```
 
 ## test
@@ -69,7 +69,7 @@ $ pytest -qs tests
 
 ```bash
 $ poetry config virtualenvs.in-project true
-$ pyenv global 3.9 # Version 3.7 or higher will work, but 3.9 is recommended.
+$ pyenv global 3.9 # Version 3.8 or higher will work, but 3.9 is recommended.
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ python -m pip install --upgrade pip
