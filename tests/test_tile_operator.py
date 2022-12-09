@@ -8,7 +8,6 @@ from tile_operator.operate import TileOperate
 
 def create_tile_operator_instance():
     to = TileOperate(
-        tile_url="https://tile.openstreetmap.jp/{z}/{x}/{y}.png",
         zoom_level=18,
     )
     return to
@@ -37,10 +36,12 @@ def test_tile_list():
 
 
 def test_tile_download():
+    tile_url = "https://tile.openstreetmap.jp/{z}/{x}/{y}.png"
+
     to = create_tile_operator_instance()
     tile_list = to.get_tile_list()
 
-    to.download_tile(*tile_list[0])
+    to.download_tile(tile_url, *tile_list[0])
     assert os.path.exists("./output/18/233997/96254.png")
 
     test_image = Image.open("./tests/data/96254.png")
