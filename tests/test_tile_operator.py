@@ -61,9 +61,10 @@ def test_get_tile_bounds_list():
     to = create_tile_operator_instance()
     to.set_tile_list()
     tile_bounds_list = to.get_tile_bounds_3857_list()
+    first_bounds = tile_bounds_list[0][0]
 
     test_bbox = mercantile.Bbox(15734562.272503529, 5322616.027609963, 15734715.146560099, 5322768.901666533)
-    assert tile_bounds_list[0] == test_bbox
+    assert first_bounds == test_bbox
 
 
 def test_create_tile_grid_from_bbox_list():

@@ -163,7 +163,7 @@ class TileOperate:
     @staticmethod
     def get_tile_bounds_3857(x, y, zoom_level):
         bounds = mercantile.xy_bounds(x, y, zoom_level)
-        return bounds
+        return bounds, x, y, zoom_level
 
     def get_tile_bounds_3857_list(self):
         tile_bounds_list = [self.get_tile_bounds_3857(*t) for t in self.get_tile_list_with_zoom_level()]
@@ -171,18 +171,41 @@ class TileOperate:
 
     def create_tile_grid_from_bbox_list(self):
         tile_bounds = self.get_tile_bounds_3857_list()
+
         grid = []
+        x_list = []
+        y_list = []
+        z_list = []
+
         for bounds in tile_bounds:
+            left, bottom, right, top = bounds[0]
+            print(left, bottom, right, top)
+            x, y, z = bounds[1:]
+
             grid.append(
-                Polygon(
-                    [
-                        [bounds[0], bounds[1]],
-                        [bounds[0], bounds[3]],
-                        [bounds[2], bounds[3]],
-                        [bounds[2], bounds[1]],
-                        [bounds[0], bounds[1]],
-                    ]
+                (
+                    Polygon(
+                        [
+                            (left, bottom),
+                            (left, top),
+                            (right, top),
+                            (right, bottom),
+                            (left, bottom),
+                        ]
+                    )
                 )
             )
-        grid = gpd.GeoDataFrame({"geometry": grid}, crs="EPSG:3857")
+            x_list.append(x)
+            y_list.append(y)
+            z_list.append(z)
+
+        grid = gpd.GeoDataFrame(
+            {
+                "geometry": grid,
+                "x": x_list,
+                "y": y_list,
+                "z": z_list,
+            },
+            crs="EPSG:3857",
+        )
         return grid
