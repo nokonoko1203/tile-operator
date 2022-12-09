@@ -7,11 +7,28 @@ import requests
 from tqdm import tqdm
 
 
+class Bounds:
+    def __init__(self, left, bottom, right, top):
+        self.left = left
+        self.bottom = bottom
+        self.right = right
+        self.top = top
+
+    def bounds(self):
+        return self.left, self.bottom, self.right, self.top
+
+
+def file_to_bounds(file_path):
+    gdf = gpd.read_file(file_path)
+    bounds = gdf.total_bounds
+    return Bounds(*bounds)
+
+
 class TileOperate:
     def __init__(self, tile_url, file_path, bbox=(141.347, 43.066, 141.354, 43.070), zoom_level=18):
         self.tile_url = tile_url
         self.file_path = file_path
-        self.bbox = bbox
+        self.bbox = Bounds(*bbox)
         self.zoom_level = zoom_level
         self.geometries = self.get_geometries()
         self.tile_list = []
