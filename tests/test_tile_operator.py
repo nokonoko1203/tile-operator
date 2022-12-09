@@ -45,9 +45,9 @@ def test_tile_download():
     assert os.path.exists("./output/18/233998/96254.png")
 
     test_image = Image.open("./tests/data/96254.png")
-    test_array = np.array(test_image)
+    test_array = np.array(test_image, dtype=np.uint8)
     downloaded = Image.open("./output/18/233998/96254.png")
-    downloaded_array = np.array(downloaded)
+    downloaded_array = np.array(downloaded, dtype=np.uint8)
 
     np.testing.assert_array_equal(test_array, downloaded_array)
 
