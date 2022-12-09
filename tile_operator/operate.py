@@ -2,6 +2,7 @@ import math
 import os
 
 import geopandas as gpd
+import mercantile
 import rasterio
 import requests
 from tqdm import tqdm
@@ -157,3 +158,12 @@ class TileOperate:
     def get_tile_list_with_zoom_level(self):
         tile_list = [[*t, self.zoom_level] for t in self.tile_list]
         return tile_list
+
+    @staticmethod
+    def get_tile_bounds_3857(x, y, zoom_level):
+        bounds = mercantile.xy_bounds(x, y, zoom_level)
+        return bounds
+
+    def get_tile_bounds_3857_list(self):
+        tile_bounds_list = [self.get_tile_bounds_3857(*t) for t in self.get_tile_list_with_zoom_level()]
+        return tile_bounds_list

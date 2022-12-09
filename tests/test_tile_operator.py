@@ -1,5 +1,6 @@
 import os
 
+import mercantile
 import numpy as np
 from PIL import Image
 
@@ -52,3 +53,12 @@ def test_tile_download():
     np.testing.assert_array_equal(test_array, downloaded_array)
 
     os.remove("./output/18/233997/96254.png")
+
+
+def test_get_tile_bounds_list():
+    to = create_tile_operator_instance()
+    to.set_tile_list()
+    tile_bounds_list = to.get_tile_bounds_3857_list()
+
+    test_bbox = mercantile.Bbox(15734562.272503529, 5322616.027609963, 15734715.146560099, 5322768.901666533)
+    assert tile_bounds_list[0] == test_bbox
