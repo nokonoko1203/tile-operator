@@ -19,14 +19,14 @@ class Bbox:
 
 
 def file_to_bounds(file_path):
+    """ファイルからバウンディングボックスを取得する（EPSG:4326のgeojsonのみを想定）"""
     gdf = gpd.read_file(file_path)
     bounds = gdf.total_bounds
     return Bbox(*bounds)
 
 
 class TileOperate:
-    def __init__(self, tile_url, bbox=(141.347, 43.066, 141.354, 43.070), zoom_level=18):
-        self.tile_url = tile_url
+    def __init__(self, bbox=(141.347, 43.066, 141.354, 43.070), zoom_level=18):
         self.bbox = Bbox(*bbox)
         self.zoom_level = zoom_level
         self.tile_list = []
@@ -69,12 +69,12 @@ class TileOperate:
     def set_tile_list(self):
         self.tile_list = self.get_tile_list()
 
-    def download_all_tiles(self):
+    def download_all_tiles(self, tile_url):
         for tile in tqdm(self.tile_list):
-            self.download_tile(tile[0], tile[1])
+            self.download_tile(tile_url, tile[0], tile[1])
 
-    def download_tile(self, x, y, output="./output"):
-        url = self.tile_url.format(z=self.zoom_level, x=x, y=y)
+    def download_tile(self, tile_url, x, y, output="./output"):
+        url = tile_url.format(z=self.zoom_level, x=x, y=y)
         ext = os.path.splitext(url)[1]
 
         r = requests.get(url)
@@ -108,12 +108,12 @@ class TileOperate:
         bbox = self.tile_coords_to_latlon_bbox(x, y)
         return self.latlon_to_epsg3857(bbox[0], bbox[1]), self.latlon_to_epsg3857(bbox[2], bbox[3])
 
-    def get_file_path_list(self, output="./output"):
-        file_path_list = []
-        for tile in self.tile_list:
-            ext = os.path.splitext(self.tile_url)[1]
-            file_path_list.append(output + f"/{self.zoom_level}/{tile[0]}/{tile[1]}{ext}")
-        return file_path_list
+    # def get_file_path_list(self, output="./output"):
+    #     file_path_list = []
+    #     for tile in self.tile_list:
+    #         ext = os.path.splitext(self.tile_url)[1]
+    #         file_path_list.append(output + f"/{self.zoom_level}/{tile[0]}/{tile[1]}{ext}")
+    #     return file_path_list
 
     def get_pixel_center(self, tile_x, tile_y):
         bbox = self.tile_coords_to_epsg3857_bbox(tile_x, tile_y)
