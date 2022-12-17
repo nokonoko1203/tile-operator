@@ -164,3 +164,5 @@ cython_debug/
 
 # other
 output/
+.idea/
+.DS_Store
